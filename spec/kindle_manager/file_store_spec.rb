@@ -30,7 +30,7 @@ describe KindleManager::FileStore do
     end
   end
 
-  describe '#record_page' do
+  describe '#record_page', browser: true do
     it "saves files in downloads directory" do
       store = KindleManager::FileStore.new(session)
       store.record_page
