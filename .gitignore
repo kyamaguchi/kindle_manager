@@ -9,6 +9,7 @@
 /tmp/
 /.env
 /.byebug_history
+/downloads/
 
 # rspec failure tracking
 .rspec_status
