@@ -1,8 +1,6 @@
 # KindleManager
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/kindle_manager`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Manage kindle books
 
 ## Installation
 
@@ -22,7 +20,23 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Setup
+
+Create _.env_ following the instructions of https://github.com/kyamaguchi/amazon_auth
+
+### Run
+
+```
+bin/console
+```
+
+In console
+
+```
+client = KindleManager::Client.new
+client.load_kindle_list
+client.quit
+```
 
 ## Development
 

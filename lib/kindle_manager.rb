@@ -1,5 +1,6 @@
+require 'amazon_auth'
 require "kindle_manager/version"
+require "kindle_manager/client"
 
 module KindleManager
-  # Your code goes here...
 end
