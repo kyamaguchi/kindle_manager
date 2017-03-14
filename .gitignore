@@ -10,6 +10,7 @@
 /.env
 /.byebug_history
 /downloads/
+/spec/fixtures/files/
 
 # rspec failure tracking
 .rspec_status
