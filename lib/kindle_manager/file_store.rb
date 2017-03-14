@@ -1,8 +1,11 @@
 module KindleManager
   class FileStore
+    attr_accessor :dir_name
 
     def initialize(session, options = {})
-      @dir_name = Time.current.strftime("%Y%m%d%H%M%S")
+      @dir_name = options.fetch(:dir_name) do
+        options[:latest] ? find_latest_dir_name : Time.current.strftime("%Y%m%d%H%M%S")
+      end
       @session = session
     end
 
@@ -42,6 +45,10 @@ module KindleManager
 
     def list_html_files
       self.class.list_html_files(base_dir)
+    end
+
+    def find_latest_dir_name
+      self.class.list_download_dirs.sort.last.split('/').last
     end
 
     private

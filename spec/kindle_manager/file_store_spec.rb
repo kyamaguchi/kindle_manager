@@ -18,6 +18,24 @@ describe KindleManager::FileStore do
     end
   end
 
+  describe '#dir_name' do
+    it "creates dir name from timestamp" do
+      store = KindleManager::FileStore.new(nil)
+      expect(store.dir_name).to match(%r{#{Time.current.strftime('%Y%m%d')}\d{6}})
+    end
+
+    it "accepts argument of dir_name" do
+      store = KindleManager::FileStore.new(nil, dir_name: '20170313223118')
+      expect(store.dir_name).to eql('20170313223118')
+    end
+
+    it "finds latest dir_name when latest flag is given" do
+      store = KindleManager::FileStore.new(nil, latest: true)
+      expect(store.dir_name).to eql('20170313223421')
+    end
+  end
+
+
   describe '#html_path' do
     it "has filename with given time" do
       store = KindleManager::FileStore.new(nil)
