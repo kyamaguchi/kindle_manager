@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe KindleManager::FileStore do
+  before do
+    allow(KindleManager::FileStore).to receive(:downloads_dir).and_return('spec/fixtures/downloads')
+  end
+
   let(:session) do
     session = Capybara::Session.new(:selenium)
     session.visit('http://www.google.com')
@@ -10,7 +14,7 @@ describe KindleManager::FileStore do
   describe '#base_dir' do
     it "includes directory with timestamp" do
       store = KindleManager::FileStore.new(nil)
-      expect(store.base_dir).to match(%r{\Adownloads/#{Time.current.strftime('%Y%m%d')}\d{6}})
+      expect(store.base_dir).to match(%r{downloads/#{Time.current.strftime('%Y%m%d')}\d{6}})
     end
   end
 
@@ -18,7 +22,7 @@ describe KindleManager::FileStore do
     it "has filename with given time" do
       store = KindleManager::FileStore.new(nil)
       time = Time.current
-      expect(store.html_path(time)).to match(%r{\Adownloads/\d{14}/\d{17}\.html\z})
+      expect(store.html_path(time)).to match(%r{downloads/\d{14}/\d{17}\.html\z})
     end
   end
 
@@ -26,7 +30,7 @@ describe KindleManager::FileStore do
     it "has filename with given time" do
       store = KindleManager::FileStore.new(nil)
       time = Time.current
-      expect(store.image_path(time)).to match(%r{\Adownloads/\d{14}/\d{17}\.png\z})
+      expect(store.image_path(time)).to match(%r{downloads/\d{14}/\d{17}\.png\z})
     end
   end
 
@@ -45,6 +49,22 @@ describe KindleManager::FileStore do
       expect(session).to have_selector('#resultStats')
       store.record_page
       expect(Dir[File.join(store.base_dir,'*.html')].select { |f| File.file? f }.map{|f| File.read(f).size }.uniq.size).to be >= 2
+    end
+  end
+
+  describe '.list_download_dirs' do
+    it 'lists dirs' do
+      expect(KindleManager::FileStore.list_download_dirs.size).to be > 0
+    end
+  end
+
+  describe '.list_html_files' do
+    it 'lists files' do
+      expect(KindleManager::FileStore.list_html_files.size).to be > 0
+    end
+
+    it 'lists files with args' do
+      expect(KindleManager::FileStore.list_html_files('20170313223118').size).to be > 0
     end
   end
 end

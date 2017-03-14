@@ -2,12 +2,16 @@ module KindleManager
   class FileStore
 
     def initialize(session, options = {})
-      @time = Time.current
+      @dir_name = Time.current.strftime("%Y%m%d%H%M%S")
       @session = session
     end
 
     def base_dir
-      File.join('downloads', @time.strftime("%Y%m%d%H%M%S"))
+      File.join(self.class.downloads_dir, @dir_name)
+    end
+
+    def self.downloads_dir
+      'downloads'
     end
 
     def html_path(time)
@@ -22,6 +26,22 @@ module KindleManager
       time = Time.current
       @session.save_page(html_path(time))
       @session.save_screenshot(image_path(time))
+    end
+
+    def self.list_download_dirs
+      Dir["#{downloads_dir}/*"].select{|f| File.directory? f }
+    end
+
+    def self.list_html_files(dir = nil)
+      if dir
+        Dir[File.join(downloads_dir, dir,'*.html')].select{|f| File.file? f }
+      else
+        Dir["#{downloads_dir}/*/*.html"].select{|f| File.file? f }
+      end
+    end
+
+    def list_html_files
+      self.class.list_html_files(base_dir)
     end
 
     private
