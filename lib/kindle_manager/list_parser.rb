@@ -31,6 +31,14 @@ module KindleManager
       def collection_count
         @_collection_count ||= @node.css(".collectionsCount .myx-collection-count").first.text.strip.to_i
       end
+
+      def to_hash
+        hash = {}
+        %w[asin title tag author date collection_count].each do |f|
+          hash[f] = send(f)
+        end
+        hash
+      end
     end
 
     def initialize(filepath, options = {})
