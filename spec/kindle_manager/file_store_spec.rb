@@ -32,6 +32,8 @@ describe KindleManager::FileStore do
     it "finds latest dir_name when latest flag is given" do
       store = KindleManager::FileStore.new(nil, latest: true)
       expect(store.dir_name).to eql('20170313223421')
+
+      expect(store.list_html_files.size).to be > 0
     end
   end
 

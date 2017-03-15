@@ -44,7 +44,7 @@ module KindleManager
     end
 
     def list_html_files
-      self.class.list_html_files(base_dir)
+      self.class.list_html_files(@dir_name)
     end
 
     def find_latest_dir_name
