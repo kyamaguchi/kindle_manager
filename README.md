@@ -1,6 +1,6 @@
 # KindleManager
 
-Manage kindle books
+Scrape information of kindle books from amazon site
 
 ## Installation
 
@@ -24,6 +24,8 @@ Or install it yourself as:
 
 Create _.env_ following the instructions of https://github.com/kyamaguchi/amazon_auth
 
+And `Dotenv.load` or `gem 'dotenv-rails'` may be required when you use this in your app.
+
 ### Run
 
 ```
@@ -40,6 +42,12 @@ books = client.load_kindle_books
 client.quit
 ```
 
+#### Options
+
+Debug print: `client = KindleManager::Client.new(debug: true)`
+
+Limit fetching with number of fetched books: `client = KindleManager::Client.new(limit: 100)`
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
@@ -48,7 +56,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/kindle_manager.
+Bug reports and pull requests are welcome on GitHub at https://github.com/kyamaguchi/kindle_manager.
 
 
 ## License
