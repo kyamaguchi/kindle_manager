@@ -5,6 +5,10 @@ module KindleManager
         @node = node
       end
 
+      def inspect
+        "#<#{self.class.name}:#{self.object_id} #{self.to_hash}>"
+      end
+
       def asin
         @_asin ||= @node['name'].gsub(/\AcontentTabList_/, '')
       end
