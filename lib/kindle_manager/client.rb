@@ -4,6 +4,7 @@ module KindleManager
 
     def initialize(options = {})
       @debug = options.fetch(:debug, false)
+      @limit = options.fetch(:limit, nil)
       begin
         @client = AmazonAuth::Client.new
       rescue => e
@@ -60,7 +61,9 @@ module KindleManager
       wait_for_selector('.contentCount_myx')
       @current_loop = 0
       while @current_loop <= 12 # max attempts
-        if has_more_button?
+        if @limit && @limit < number_of_fetched_books
+          break
+        elsif has_more_button?
           debug_print_page
           @current_loop = 0
 
@@ -89,6 +92,11 @@ module KindleManager
 
     def has_more_button?
       page.all('#contentTable_showMore_myx').map(&:text).include?('もっと表示')
+    end
+
+    def number_of_fetched_books
+      m = page.first('.contentCount_myx').text.match(/(\d+)を表示中/)
+      m.nil? ? nil : m[1].to_i
     end
 
     def loading?
