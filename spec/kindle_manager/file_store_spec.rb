@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 describe KindleManager::FileStore do
-  before do
-    allow(KindleManager::FileStore).to receive(:downloads_dir).and_return('spec/fixtures/downloads')
-  end
-
   let(:session) do
     session = Capybara::Session.new(:selenium)
     session.visit('http://www.google.com')

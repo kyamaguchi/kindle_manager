@@ -1,6 +1,6 @@
 module KindleManager
   class Client
-    attr_accessor :page, :store
+    attr_accessor :page
 
     def initialize(options = {})
       @debug = options.fetch(:debug, false)
@@ -13,9 +13,18 @@ module KindleManager
       end
     end
 
-    def load_kindle_list
+    def store
+      # Create file store without session(page) by default
+      @store ||= KindleManager::FileStore.new(nil, latest: true)
+    end
+
+    def setup_file_store_with_session
+      @store = KindleManager::FileStore.new(page)
+    end
+
+    def fetch_kindle_list
       sign_in
-      setup_file_store
+      setup_file_store_with_session
       go_to_kindle_management_page
       begin
         load_next_kindle_list
@@ -26,12 +35,17 @@ module KindleManager
       end
     end
 
-    def sign_in
-      @page = @client.sign_in
+    def load_kindle_books
+      books = []
+      store.list_html_files.each do |file|
+        parser = KindleManager::ListParser.new(file)
+        books += parser.book_list
+      end
+      books.uniq(&:asin)
     end
 
-    def setup_file_store
-      @store = KindleManager::FileStore.new(page)
+    def sign_in
+      @page = @client.sign_in
     end
 
     def go_to_kindle_management_page

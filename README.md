@@ -34,7 +34,9 @@ In console
 
 ```
 client = KindleManager::Client.new
-client.load_kindle_list
+client.fetch_kindle_list
+books = client.load_kindle_books
+
 client.quit
 ```
 
