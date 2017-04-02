@@ -14,11 +14,11 @@ describe KindleManager::ListParser do
 
   it "finds selector of list table" do
     expect(@parser.body).to be_present
-    expect(@parser.doc.css("div[id^='contentTabList_']").size).to eql(400)
+    expect(@parser.doc.css("div[id^='contentTabList_']").size).to be > 0
   end
 
   it "finds list table" do
-    expect(@parser.book_list.size).to eql(400)
+    expect(@parser.book_list.size).to be > 0
     expect(@parser.book_list.first).to be_a(KindleManager::ListParser::BookRow)
   end
 
@@ -27,11 +27,11 @@ describe KindleManager::ListParser do
       book_row = @parser.book_list.last
       expect(book_row.asin).to match(/\AB0.{8}\z/)
       expect(book_row.title).to be_present
-      expect(@parser.book_list.map(&:tag)).to include('サンプル')
+      expect(@parser.book_list.map(&:tag)).to include('Sample')
       expect(book_row.author).to be_present
       expect(book_row.date).to be_present
       expect(book_row.date).to be_a(Date)
-      expect(@parser.book_list.map(&:collection_count)).to include(*[0,1])
+      expect(@parser.book_list.map(&:collection_count).compact).to be_present
     end
 
     it "prints json" do
