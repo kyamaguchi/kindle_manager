@@ -80,7 +80,7 @@ module KindleManager
         sleep 5
         @current_loop += 1
       end
-      debug_print_page
+      snapshot_page
     end
 
     def quit
@@ -108,9 +108,13 @@ module KindleManager
       session.first('.myx-popover-loading-wrapper').present?
     end
 
+    def snapshot_page
+      store.record_page
+      debug_print_page
+    end
+
     def debug_print_page
       if @debug
-        store.record_page
         puts Time.current.strftime("%Y-%m-%d %H:%M:%S")
         puts "Loop: #{@current_loop}"
         puts session.first('.contentCount_myx').text if session.first('.contentCount_myx')
