@@ -54,11 +54,8 @@ module KindleManager
     end
 
     def go_to_kindle_management_page
-      wait_for_selector('#shopAllLinks')
-      session.within('#shopAllLinks') do
-        session.find('a', text: 'コンテンツと端末の管理').click
-      end
-      session
+      wait_for_selector('#shopAllLinks', 5)
+      session.all('a').find{|e| e['href'] =~ %r{/gp/digital/fiona/manage/} }.click
     end
 
     def load_next_kindle_list
@@ -71,9 +68,9 @@ module KindleManager
           debug_print_page
           @current_loop = 0
 
-          puts "Clicking もっと表示"
+          puts "Clicking 'Show More'"
           session.execute_script "window.scrollBy(0,-800)"
-          session.click_on('もっと表示')
+          show_more_button.click
           sleep 1
           raise('Clicking of more button may have failed') if has_more_button?
         else
@@ -95,12 +92,16 @@ module KindleManager
     end
 
     def has_more_button?
-      session.all('#contentTable_showMore_myx').map(&:text).include?('もっと表示')
+      !!show_more_button
+    end
+
+    def show_more_button
+      session.all('#contentTable_showMore_myx').find{|e| e['outerHTML'].match(/showmore_button/) }
     end
 
     def number_of_fetched_books
-      m = session.first('.contentCount_myx').text.match(/(\d+)を表示中/)
-      m.nil? ? nil : m[1].to_i
+      m = session.first('.contentCount_myx').text.match(/(\d+) - (\d+)/)
+      m.nil? ? nil : m[2].to_i
     end
 
     def loading?
