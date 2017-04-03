@@ -1,6 +1,6 @@
 module KindleManager
   class Client
-    attr_accessor :page
+    attr_accessor :session
 
     def initialize(options = {})
       @debug = options.fetch(:debug, false)
@@ -14,13 +14,17 @@ module KindleManager
       end
     end
 
+    def session
+      @session ||= @client.session
+    end
+
     def store
-      # Create file store without session(page) by default
+      # Create file store without session(session) by default
       @store ||= KindleManager::FileStore.new(nil, latest: true)
     end
 
     def setup_file_store_with_session
-      @store = KindleManager::FileStore.new(page)
+      @store = KindleManager::FileStore.new(session)
     end
 
     def fetch_kindle_list
@@ -46,15 +50,12 @@ module KindleManager
     end
 
     def sign_in
-      @page = @client.sign_in
+      @client.sign_in
     end
 
     def go_to_kindle_management_page
-      wait_for_selector('#shopAllLinks')
-      page.within('#shopAllLinks') do
-        page.find('a', text: 'コンテンツと端末の管理').click
-      end
-      page
+      wait_for_selector('#shopAllLinks', 5)
+      session.all('a').find{|e| e['href'] =~ %r{/gp/digital/fiona/manage/} }.click
     end
 
     def load_next_kindle_list
@@ -67,48 +68,56 @@ module KindleManager
           debug_print_page
           @current_loop = 0
 
-          puts "Clicking もっと表示"
-          page.execute_script "window.scrollBy(0,-800)"
-          page.click_on('もっと表示')
+          puts "Clicking 'Show More'"
+          session.execute_script "window.scrollBy(0,-800)"
+          show_more_button.click
           sleep 1
           raise('Clicking of more button may have failed') if has_more_button?
         else
           puts "Scrolling #{@current_loop}"
-          page.execute_script "window.scrollBy(0,10000)"
+          session.execute_script "window.scrollBy(0,10000)"
         end
         sleep 5
         @current_loop += 1
       end
-      debug_print_page
+      snapshot_page
     end
 
     def quit
-      page.driver.quit
+      session.driver.quit
     end
 
     def wait_for_selector(selector, seconds = 3)
-      seconds.times { sleep(1) unless page.first(selector) }
+      seconds.times { sleep(1) unless session.first(selector) }
     end
 
     def has_more_button?
-      page.all('#contentTable_showMore_myx').map(&:text).include?('もっと表示')
+      !!show_more_button
+    end
+
+    def show_more_button
+      session.all('#contentTable_showMore_myx').find{|e| e['outerHTML'].match(/showmore_button/) }
     end
 
     def number_of_fetched_books
-      m = page.first('.contentCount_myx').text.match(/(\d+)を表示中/)
-      m.nil? ? nil : m[1].to_i
+      m = session.first('.contentCount_myx').text.match(/(\d+) - (\d+)/)
+      m.nil? ? nil : m[2].to_i
     end
 
     def loading?
-      page.first('.myx-popover-loading-wrapper').present?
+      session.first('.myx-popover-loading-wrapper').present?
+    end
+
+    def snapshot_page
+      store.record_page
+      debug_print_page
     end
 
     def debug_print_page
       if @debug
-        store.record_page
         puts Time.current.strftime("%Y-%m-%d %H:%M:%S")
         puts "Loop: #{@current_loop}"
-        puts page.first('.contentCount_myx').text if page.first('.contentCount_myx')
+        puts session.first('.contentCount_myx').text if session.first('.contentCount_myx')
         puts
       end
     end
