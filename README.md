@@ -1,5 +1,7 @@
 # KindleManager
 
+[![Build Status](https://travis-ci.org/kyamaguchi/kindle_manager.svg?branch=master)](https://travis-ci.org/kyamaguchi/kindle_manager)
+
 Scrape information of kindle books from amazon site
 
 ## Installation
