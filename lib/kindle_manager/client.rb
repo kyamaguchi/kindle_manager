@@ -5,6 +5,7 @@ module KindleManager
     def initialize(options = {})
       @debug = options.fetch(:debug, false)
       @limit = options.fetch(:limit, nil)
+      @options = options
       begin
         @client = AmazonAuth::Client.new
       rescue => e
@@ -19,17 +20,12 @@ module KindleManager
     end
 
     def store
-      # Create file store without session(session) by default
-      @store ||= KindleManager::FileStore.new(nil, latest: true)
-    end
-
-    def setup_file_store_with_session
-      @store = KindleManager::FileStore.new(session)
+      @store ||= KindleManager::FileStore.new(@options)
     end
 
     def fetch_kindle_list
       sign_in
-      setup_file_store_with_session
+      store.session = session
       go_to_kindle_management_page
       begin
         load_next_kindle_list
