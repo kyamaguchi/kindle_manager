@@ -1,13 +1,13 @@
 module KindleManager
   class FileStore
-    attr_accessor :dir_name
+    attr_accessor :dir_name, :session
 
-    def initialize(session, options = {})
+    def initialize(options = {})
       @dir_name = options.fetch(:dir_name) do
         tmp_dir_name = options[:create] ? nil : find_latest_dir_name
         tmp_dir_name.presence || Time.current.strftime("%Y%m%d%H%M%S")
       end
-      @session = session
+      @session = options.fetch(:session, nil)
     end
 
     def base_dir
