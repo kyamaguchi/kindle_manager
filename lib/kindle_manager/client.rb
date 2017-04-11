@@ -105,8 +105,11 @@ module KindleManager
     end
 
     def number_of_fetched_books
-      m = session.first('.contentCount_myx').text.match(/(\d+) - (\d+)/)
-      m.nil? ? nil : m[2].to_i
+      re = (AmazonInfo.domain =~ /\.jp\z/ ? /(\d+)〜(\d+)/ : /(\d+) - (\d+)/)
+      text = session.first('.contentCount_myx').text
+      m = text.match(re)
+      return m[2].to_i if m.present?
+      raise("Couldn't get the number of fetched books [#{text}]")
     end
 
     def loading?
