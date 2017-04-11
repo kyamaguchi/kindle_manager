@@ -4,7 +4,8 @@ module KindleManager
 
     def initialize(session, options = {})
       @dir_name = options.fetch(:dir_name) do
-        options[:latest] ? find_latest_dir_name : Time.current.strftime("%Y%m%d%H%M%S")
+        tmp_dir_name = options[:create] ? nil : find_latest_dir_name
+        tmp_dir_name.presence || Time.current.strftime("%Y%m%d%H%M%S")
       end
       @session = session
     end
@@ -48,7 +49,7 @@ module KindleManager
     end
 
     def find_latest_dir_name
-      self.class.list_download_dirs.sort.last.split('/').last
+      self.class.list_download_dirs.sort.last.to_s.split('/').last
     end
 
     private

@@ -10,16 +10,19 @@ describe KindleManager::FileStore do
   describe '#base_dir' do
     it "includes directory with timestamp" do
       store = KindleManager::FileStore.new(nil)
-      expect(store.base_dir).to match(%r{downloads/#{Time.current.strftime('%Y%m%d')}\d{6}})
+      expect(store.base_dir).to match(%r{downloads/\d{14}})
     end
   end
 
   describe '#dir_name' do
     let(:old_dir_name) { '20170313223118' }
+    let(:new_dir_name) { '20170313223421' }
 
-    it "creates dir name from timestamp" do
-      store = KindleManager::FileStore.new(nil)
+    it "creates dir name from timestamp create flag is given" do
+      store = KindleManager::FileStore.new(nil, create: true)
       expect(store.dir_name).to match(%r{#{Time.current.strftime('%Y%m%d')}\d{6}})
+      expect(store.dir_name).to_not eql(old_dir_name)
+      expect(store.dir_name).to_not eql(new_dir_name)
     end
 
     it "accepts argument of dir_name" do
@@ -27,12 +30,18 @@ describe KindleManager::FileStore do
       expect(store.dir_name).to eql(old_dir_name)
     end
 
-    it "finds latest dir_name when latest flag is given" do
-      store = KindleManager::FileStore.new(nil, latest: true)
-      expect(store.dir_name).to_not eql(old_dir_name)
-      expect(store.dir_name).to match(%r{\A\d{14}\z})
-
+    it "finds latest dir_name by default" do
+      store = KindleManager::FileStore.new(nil)
+      expect(store.dir_name).to eql(new_dir_name)
       expect(store.list_html_files.size).to be > 0
+    end
+
+    it "creates directory when directories don't exist" do
+      allow(KindleManager::FileStore).to receive(:downloads_dir).and_return('spec/fixtures/downloads/empty')
+      store = KindleManager::FileStore.new(nil)
+      expect(store.dir_name).to match(%r{#{Time.current.strftime('%Y%m%d')}\d{6}})
+      expect(store.dir_name).to_not eql(old_dir_name)
+      expect(store.dir_name).to_not eql(new_dir_name)
     end
   end
 
