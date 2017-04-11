@@ -30,7 +30,7 @@ module KindleManager
       begin
         load_next_kindle_list
       rescue => e
-        byebug
+        byebug if defined?(Byebug)
         # retry ?
         puts e
       end
