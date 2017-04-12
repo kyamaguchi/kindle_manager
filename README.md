@@ -26,6 +26,12 @@ Or install it yourself as:
 
 Create _.env_ following the instructions of https://github.com/kyamaguchi/amazon_auth
 
+```
+amazon_auth
+
+vi .env
+```
+
 And `Dotenv.load` or `gem 'dotenv-rails'` may be required when you use this in your app.
 
 ### Run
@@ -37,7 +43,7 @@ bin/console
 In console
 
 ```
-client = KindleManager::Client.new
+client = KindleManager::Client.new(debug: true)
 client.fetch_kindle_list
 books = client.load_kindle_books
 

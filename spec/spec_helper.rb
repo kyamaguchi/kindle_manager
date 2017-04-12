@@ -13,5 +13,10 @@ RSpec.configure do |config|
 
   config.before do
     allow(KindleManager::FileStore).to receive(:downloads_dir).and_return('spec/fixtures/downloads')
+
+    # Mock credentials
+    %w[AMAZON_USERNAME_CODE AMAZON_PASSWORD_CODE AMAZON_CODE_SALT].each do |key|
+      ENV[key] = 'test'
+    end
   end
 end

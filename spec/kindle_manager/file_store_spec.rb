@@ -9,37 +9,46 @@ describe KindleManager::FileStore do
 
   describe '#base_dir' do
     it "includes directory with timestamp" do
-      store = KindleManager::FileStore.new(nil)
-      expect(store.base_dir).to match(%r{downloads/#{Time.current.strftime('%Y%m%d')}\d{6}})
+      store = KindleManager::FileStore.new
+      expect(store.base_dir).to match(%r{downloads/\d{14}})
     end
   end
 
   describe '#dir_name' do
     let(:old_dir_name) { '20170313223118' }
+    let(:new_dir_name) { '20170313223421' }
 
-    it "creates dir name from timestamp" do
-      store = KindleManager::FileStore.new(nil)
+    it "creates dir name from timestamp create flag is given" do
+      store = KindleManager::FileStore.new(create: true)
       expect(store.dir_name).to match(%r{#{Time.current.strftime('%Y%m%d')}\d{6}})
+      expect(store.dir_name).to_not eql(old_dir_name)
+      expect(store.dir_name).to_not eql(new_dir_name)
     end
 
     it "accepts argument of dir_name" do
-      store = KindleManager::FileStore.new(nil, dir_name: old_dir_name)
+      store = KindleManager::FileStore.new(dir_name: old_dir_name)
       expect(store.dir_name).to eql(old_dir_name)
     end
 
-    it "finds latest dir_name when latest flag is given" do
-      store = KindleManager::FileStore.new(nil, latest: true)
-      expect(store.dir_name).to_not eql(old_dir_name)
-      expect(store.dir_name).to match(%r{\A\d{14}\z})
-
+    it "finds latest dir_name by default" do
+      store = KindleManager::FileStore.new
+      expect(store.dir_name).to eql(new_dir_name)
       expect(store.list_html_files.size).to be > 0
+    end
+
+    it "creates directory when directories don't exist" do
+      allow(KindleManager::FileStore).to receive(:downloads_dir).and_return('spec/fixtures/downloads/empty')
+      store = KindleManager::FileStore.new
+      expect(store.dir_name).to match(%r{#{Time.current.strftime('%Y%m%d')}\d{6}})
+      expect(store.dir_name).to_not eql(old_dir_name)
+      expect(store.dir_name).to_not eql(new_dir_name)
     end
   end
 
 
   describe '#html_path' do
     it "has filename with given time" do
-      store = KindleManager::FileStore.new(nil)
+      store = KindleManager::FileStore.new
       time = Time.current
       expect(store.html_path(time)).to match(%r{downloads/\d{14}/\d{17}\.html\z})
     end
@@ -47,7 +56,7 @@ describe KindleManager::FileStore do
 
   describe '#image_path' do
     it "has filename with given time" do
-      store = KindleManager::FileStore.new(nil)
+      store = KindleManager::FileStore.new
       time = Time.current
       expect(store.image_path(time)).to match(%r{downloads/\d{14}/\d{17}\.png\z})
     end
@@ -55,13 +64,14 @@ describe KindleManager::FileStore do
 
   describe '#record_page', browser: true do
     it "saves files in downloads directory" do
-      store = KindleManager::FileStore.new(session)
+      store = KindleManager::FileStore.new(session: session)
       store.record_page
       expect(Dir[File.join(store.base_dir,'*')].select { |f| File.file? f }.size).to be > 0
     end
 
     it "saves multiple pages" do
-      store = KindleManager::FileStore.new(session)
+      store = KindleManager::FileStore.new
+      store.session = session
       store.record_page
       session.fill_in 'lst-ib', with: 'Capybara'
       session.click_on 'Google 検索'
