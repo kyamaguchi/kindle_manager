@@ -1,5 +1,6 @@
 # KindleManager
 
+[![Gem Version](https://badge.fury.io/rb/kindle_manager.svg)](https://badge.fury.io/rb/kindle_manager)
 [![Build Status](https://travis-ci.org/kyamaguchi/kindle_manager.svg?branch=master)](https://travis-ci.org/kyamaguchi/kindle_manager)
 
 Scrape information of kindle books from amazon site
