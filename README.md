@@ -59,6 +59,14 @@ Limit fetching with number of fetched books: `client = KindleManager::Client.new
 
 Change sleep duration on scrolling (default 3 seconds): `client = KindleManager::Client.new(fetching_interval: 5)`
 
+##### Options of amazon_auth gem
+
+Chrome driver: `driver: :chrome`
+
+Renew the directory for downloading: `create: true`
+
+Login and password: `login: 'xxx', password: 'yyy'`
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
