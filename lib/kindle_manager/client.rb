@@ -10,7 +10,6 @@ module KindleManager
         @client = AmazonAuth::Client.new(@options)
       rescue => e
         puts "Please setup credentials of amazon_auth gem with folloing its instruction."
-        puts
         raise e
       end
     end
@@ -23,9 +22,14 @@ module KindleManager
       @store ||= KindleManager::FileStore.new(@options)
     end
 
+    def setup_file_store
+      store.session = session
+      log "Directory for downloaded pages is #{store.base_dir}"
+    end
+
     def fetch_kindle_list
       sign_in
-      store.session = session
+      setup_file_store
       go_to_kindle_management_page
       begin
         load_next_kindle_list
@@ -50,13 +54,13 @@ module KindleManager
     end
 
     def go_to_kindle_management_page
-      puts "Visiting kindle management page" if @debug
+      log "Visiting kindle management page"
       wait_for_selector('#shopAllLinks', 5)
       3.times do
         session.all('a').find{|e| e['href'] =~ %r{/gp/digital/fiona/manage/} }.click
         wait_for_selector('.navHeader_myx', 5)
         if session.first('.navHeader_myx')
-          puts "Page found '#{session.first('.navHeader_myx').text}'" if @debug
+          log "Page found '#{session.first('.navHeader_myx').text}'"
           break
         end
       end
@@ -72,19 +76,19 @@ module KindleManager
           snapshot_page
           @current_loop = 0
 
-          puts "Clicking 'Show More'" if @debug
+          log "Clicking 'Show More'"
           session.execute_script "window.scrollBy(0,-800)"
           show_more_button.click
           sleep 1
           raise('Clicking of more button may have failed') if has_more_button?
         else
-          puts "Loading books with scrolling #{@current_loop+1}" if @debug
+          log "Loading books with scrolling #{@current_loop+1}"
           session.execute_script "window.scrollBy(0,10000)"
         end
         sleep 5
         @current_loop += 1
       end
-      puts "Stopped loading" if @debug
+      log "Stopped loading"
       snapshot_page
     end
 
@@ -117,12 +121,14 @@ module KindleManager
     end
 
     def snapshot_page
+      log "Current page [#{session.first('.contentCount_myx').text}]" if session.first('.contentCount_myx')
       store.record_page
-      if @debug
-        puts "Saving page" + Time.current.strftime("%Y-%m-%d %H:%M:%S")
-        puts session.first('.contentCount_myx').text if session.first('.contentCount_myx')
-        puts
-      end
+      log "Saving page"
+    end
+
+    def log(message)
+      return unless @debug
+      puts "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S')}] #{message}"
     end
   end
 end
