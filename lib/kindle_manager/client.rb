@@ -7,7 +7,7 @@ module KindleManager
       @limit = options.fetch(:limit, nil)
       @options = options
       begin
-        @client = AmazonAuth::Client.new
+        @client = AmazonAuth::Client.new(@options)
       rescue => e
         puts "Please setup credentials of amazon_auth gem with folloing its instruction."
         puts
