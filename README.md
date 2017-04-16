@@ -5,6 +5,15 @@
 
 Scrape information of kindle books from amazon site
 
+##### Fetch Kindle Books information
+
+![kindle_manager_fetch](https://cloud.githubusercontent.com/assets/275284/25068993/e3792780-22ae-11e7-9040-3a91d6b3dd08.gif)
+
+##### Load books information
+
+![kindle_manager_load_books](https://cloud.githubusercontent.com/assets/275284/25068999/139b3994-22af-11e7-9e57-3cd217fa82eb.gif)
+Recorded with [Recordit](http://recordit.co/)
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -37,18 +46,24 @@ And `Dotenv.load` or `gem 'dotenv-rails'` may be required when you use this in y
 
 ### Run
 
-```
-bin/console
-```
-
 In console
 
 ```
+require 'kindle_manager'
 client = KindleManager::Client.new(debug: true)
 client.fetch_kindle_list
+
 books = client.load_kindle_books
 
 client.quit
+```
+
+Once `fetch_kindle_list` succeeds, you can load books information of downloaded pages anytime.
+(You don't need to fetch pages with launching browser every time.)
+
+```
+client = KindleManager::Client.new
+books = client.load_kindle_books
 ```
 
 #### Options
