@@ -85,7 +85,7 @@ module KindleManager
           log "Loading books with scrolling #{@current_loop+1}"
           session.execute_script "window.scrollBy(0,10000)"
         end
-        sleep 5
+        sleep fetching_interval
         @current_loop += 1
       end
       log "Stopped loading"
@@ -124,6 +124,10 @@ module KindleManager
       log "Current page [#{session.first('.contentCount_myx').text}]" if session.first('.contentCount_myx')
       store.record_page
       log "Saving page"
+    end
+
+    def fetching_interval
+      @options.fetch(:fetching_interval, 3)
     end
 
     def log(message)

@@ -57,6 +57,8 @@ Debug print: `client = KindleManager::Client.new(debug: true)`
 
 Limit fetching with number of fetched books: `client = KindleManager::Client.new(limit: 100)`
 
+Change sleep duration on scrolling (default 3 seconds): `client = KindleManager::Client.new(fetching_interval: 5)`
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
