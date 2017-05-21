@@ -6,12 +6,8 @@ module KindleManager
       @debug = options.fetch(:debug, false)
       @limit = options.fetch(:limit, nil)
       @options = options
-      begin
-        @client = AmazonAuth::Client.new(@options)
-      rescue => e
-        puts "Please setup credentials of amazon_auth gem with folloing its instruction."
-        raise e
-      end
+      @client = AmazonAuth::Client.new(@options)
+      extend(AmazonAuth::SessionExtension)
     end
 
     def session
@@ -55,10 +51,11 @@ module KindleManager
 
     def go_to_kindle_management_page
       log "Visiting kindle management page"
-      wait_for_selector('#shopAllLinks', 5)
+      wait_for_selector('#shopAllLinks', wait_time: 5)
       3.times do
-        session.all('a').find{|e| e['href'] =~ %r{/gp/digital/fiona/manage/} }.click
-        wait_for_selector('.navHeader_myx', 5)
+        link = links_for('#navFooter a').find{|link| link =~ %r{/gp/digital/fiona/manage/} }
+        session.visit link
+        wait_for_selector('.navHeader_myx')
         if session.first('.navHeader_myx')
           log "Page found '#{session.first('.navHeader_myx').text}'"
           break
@@ -94,10 +91,6 @@ module KindleManager
 
     def quit
       session.driver.quit
-    end
-
-    def wait_for_selector(selector, seconds = 3)
-      seconds.times { sleep(1) unless session.first(selector) }
     end
 
     def has_more_button?
