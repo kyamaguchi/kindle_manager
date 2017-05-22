@@ -82,6 +82,12 @@ Renew the directory for downloading: `create: true`
 
 Login and password: `login: 'xxx', password: 'yyy'`
 
+## Applications
+
+Applications using this gem
+
+- [tsundoku 積読](https://github.com/kyamaguchi/tsundoku)
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
