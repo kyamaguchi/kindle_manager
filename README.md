@@ -76,11 +76,13 @@ Limit fetching with number of fetched books: `client = KindleManager::Client.new
 
 Change sleep duration on scrolling (default 3 seconds): `client = KindleManager::Client.new(fetching_interval: 5)`
 
-##### Options of amazon_auth gem
-
-Chrome driver: `driver: :chrome`
+Change max scroll attempts (default 20): `client = KindleManager::Client.new(max_scroll_attempts: 30)`
 
 Renew the directory for downloading: `create: true`
+
+##### Options of amazon_auth gem
+
+Firefox: `driver: :firefox`
 
 Login and password: `login: 'xxx', password: 'yyy'`
 
