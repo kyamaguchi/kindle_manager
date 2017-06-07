@@ -34,6 +34,8 @@ Or install it yourself as:
 
 ### Setup
 
+[chromedriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) is required. Please [download chromedriver](http://chromedriver.storage.googleapis.com/index.html) and update chromedriver regularly.  
+
 Create _.env_ following the instructions of https://github.com/kyamaguchi/amazon_auth
 
 ```
@@ -50,7 +52,7 @@ In console
 
 ```
 require 'kindle_manager'
-client = KindleManager::Client.new(debug: true)
+client = KindleManager::Client.new(debug: true, limit: 1000)
 client.fetch_kindle_list
 
 books = client.load_kindle_books
@@ -87,6 +89,7 @@ Login and password: `login: 'xxx', password: 'yyy'`
 Applications using this gem
 
 - [tsundoku 積読](https://github.com/kyamaguchi/tsundoku)
+- Let me know(create a pull request) if you create an app
 
 ## Development
 
