@@ -5,6 +5,7 @@ module KindleManager
     def initialize(options = {})
       @debug = options.fetch(:debug, false)
       @limit = options.fetch(:limit, nil)
+      @max_scroll_attempts = options.fetch(:max_scroll_attempts, 20)
       @options = options
       @client = AmazonAuth::Client.new(@options)
       extend(AmazonAuth::SessionExtension)
@@ -66,7 +67,7 @@ module KindleManager
     def load_next_kindle_list
       wait_for_selector('.contentCount_myx')
       @current_loop = 0
-      while @current_loop <= 16 # max attempts
+      while @current_loop <= @max_scroll_attempts
         if @limit && @limit < number_of_fetched_books
           break
         elsif has_more_button?
