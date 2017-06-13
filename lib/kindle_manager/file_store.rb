@@ -7,11 +7,12 @@ module KindleManager
         tmp_dir_name = options[:create] ? nil : find_latest_dir_name
         tmp_dir_name.presence || Time.current.strftime("%Y%m%d%H%M%S")
       end
+      @sub_dir = options.fetch(:sub_dir, nil)
       @session = options.fetch(:session, nil)
     end
 
     def base_dir
-      File.join(self.class.downloads_dir, @dir_name)
+      File.join([self.class.downloads_dir, @sub_dir, @dir_name].compact)
     end
 
     def self.downloads_dir
