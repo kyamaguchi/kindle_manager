@@ -12,6 +12,11 @@ describe KindleManager::FileStore do
       store = KindleManager::FileStore.new
       expect(store.base_dir).to match(%r{downloads/\d{14}})
     end
+
+    it "accepts sub_dir option" do
+      store = KindleManager::FileStore.new(sub_dir: 'foo')
+      expect(store.base_dir).to match(%r{downloads/foo/\d{14}})
+    end
   end
 
   describe '#dir_name' do
