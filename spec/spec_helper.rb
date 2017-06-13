@@ -12,7 +12,7 @@ RSpec.configure do |config|
   config.filter_run_excluding browser: true, require_fixture: true
 
   config.before do
-    allow(KindleManager::FileStore).to receive(:downloads_dir).and_return('spec/fixtures/downloads')
+    allow_any_instance_of(KindleManager::FileStore).to receive(:downloads_dir).and_return('spec/fixtures/downloads')
 
     # Mock credentials
     %w[AMAZON_USERNAME_CODE AMAZON_PASSWORD_CODE AMAZON_CODE_SALT].each do |key|
