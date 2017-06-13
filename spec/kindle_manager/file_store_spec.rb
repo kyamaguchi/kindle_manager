@@ -67,6 +67,20 @@ describe KindleManager::FileStore do
     end
   end
 
+  describe '#list_html_files' do
+    it "lists html files" do
+      store = KindleManager::FileStore.new
+      expect(store.list_html_files.size).to be > 0
+      expect(store.list_html_files.first).to match(%r{downloads/books/\d{14}/\d{17}\.html\z})
+    end
+
+    it "lists html files with sub_dir option" do
+      store = KindleManager::FileStore.new(sub_dir: 'highlights')
+      expect(store.list_html_files.size).to be > 0
+      expect(store.list_html_files.first).to match(%r{downloads/highlights/\d{14}/\d{17}\.html\z})
+    end
+  end
+
   describe '#record_page', browser: true do
     it "saves files in downloads directory" do
       store = KindleManager::FileStore.new(session: session)
