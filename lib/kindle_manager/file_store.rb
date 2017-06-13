@@ -3,20 +3,36 @@ module KindleManager
     attr_accessor :dir_name, :session
 
     def initialize(options = {})
+      @sub_dir = options.fetch(:sub_dir, 'books')
       @dir_name = options.fetch(:dir_name) do
         tmp_dir_name = options[:create] ? nil : find_latest_dir_name
         tmp_dir_name.presence || Time.current.strftime("%Y%m%d%H%M%S")
       end
-      @sub_dir = options.fetch(:sub_dir, nil)
       @session = options.fetch(:session, nil)
     end
 
-    def base_dir
-      File.join([self.class.downloads_dir, @sub_dir, @dir_name].compact)
+    def downloads_dir
+      'downloads'
     end
 
-    def self.downloads_dir
-      'downloads'
+    def root_dir
+      File.join(downloads_dir, @sub_dir)
+    end
+
+    def base_dir
+      File.join(root_dir, @dir_name)
+    end
+
+    def list_work_dirs
+      Dir["#{root_dir}/*"].select{|f| File.directory? f }
+    end
+
+    def find_latest_dir_name
+      list_work_dirs.sort.last.to_s.split('/').last
+    end
+
+    def list_html_files(dir = nil)
+      Dir[File.join(base_dir,'*.html')].select{|f| File.file? f }
     end
 
     def html_path(time)
@@ -31,26 +47,6 @@ module KindleManager
       time = Time.current
       @session.save_page(html_path(time))
       @session.save_screenshot(image_path(time))
-    end
-
-    def self.list_download_dirs
-      Dir["#{downloads_dir}/*"].select{|f| File.directory? f }
-    end
-
-    def self.list_html_files(dir = nil)
-      if dir
-        Dir[File.join(downloads_dir, dir,'*.html')].select{|f| File.file? f }
-      else
-        Dir["#{downloads_dir}/*/*.html"].select{|f| File.file? f }
-      end
-    end
-
-    def list_html_files
-      self.class.list_html_files(@dir_name)
-    end
-
-    def find_latest_dir_name
-      self.class.list_download_dirs.sort.last.to_s.split('/').last
     end
 
     private
