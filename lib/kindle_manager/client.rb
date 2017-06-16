@@ -1,9 +1,10 @@
 module KindleManager
   class Client
+    include AmazonAuth::CommonExtension
+
     attr_accessor :session
 
     def initialize(options = {})
-      @debug = options.fetch(:debug, false)
       @limit = options.fetch(:limit, nil)
       @max_scroll_attempts = options.fetch(:max_scroll_attempts, 20)
       @options = options
@@ -31,9 +32,10 @@ module KindleManager
       begin
         load_next_kindle_list
       rescue => e
-        byebug if defined?(Byebug)
-        # retry ?
-        puts e
+        puts "[ERROR] #{e}"
+        puts e.backtrace
+        puts
+        puts "Retry manually -> load_next_kindle_list or session etc."
       end
     end
 
@@ -104,6 +106,7 @@ module KindleManager
 
     def number_of_fetched_books
       re = (AmazonInfo.domain =~ /\.jp\z/ ? /(\d+)〜(\d+)/ : /(\d+) - (\d+)/)
+      wait_for_selector('.contentCount_myx')
       text = session.first('.contentCount_myx').text
       m = text.match(re)
       return m[2].to_i if m.present?
@@ -122,11 +125,6 @@ module KindleManager
 
     def fetching_interval
       @options.fetch(:fetching_interval, 3)
-    end
-
-    def log(message)
-      return unless @debug
-      puts "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S')}] #{message}"
     end
   end
 end
