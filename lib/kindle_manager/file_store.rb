@@ -3,7 +3,7 @@ module KindleManager
     attr_accessor :dir_name, :session
 
     def initialize(options = {})
-      @sub_dir = options.fetch(:sub_dir, 'books')
+      @sub_dir = options.fetch(:sub_dir, 'books').to_s
       @dir_name = options.fetch(:dir_name) do
         tmp_dir_name = options[:create] ? nil : find_latest_dir_name
         tmp_dir_name.presence || Time.current.strftime("%Y%m%d%H%M%S")

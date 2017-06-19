@@ -24,6 +24,12 @@ module KindleManager
       adapter.fetch
     end
 
+    def fetch_kindle_highlights
+      sign_in
+      set_adapter(:highlights, @options.merge(session: session))
+      adapter.fetch
+    end
+
     def load_kindle_books
       set_adapter(:books, @options)
       adapter.load
@@ -34,7 +40,7 @@ module KindleManager
     end
 
     def set_adapter(type, options)
-      @adapter = "KindleManager::#{type.to_s.camelize}Adapter".constantize.new(options)
+      @adapter = "KindleManager::#{type.to_s.camelize}Adapter".constantize.new(options.merge(sub_dir: type))
     end
   end
 end
