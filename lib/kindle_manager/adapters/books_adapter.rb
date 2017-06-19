@@ -72,7 +72,7 @@ module KindleManager
     def number_of_fetched_books
       re = (AmazonInfo.domain =~ /\.jp\z/ ? /(\d+)〜(\d+)/ : /(\d+) - (\d+)/)
       wait_for_selector('.contentCount_myx')
-      text = session.first('.contentCount_myx').text
+      text = doc.css('.contentCount_myx').text
       m = text.match(re)
       return m[2].to_i if m.present?
       raise("Couldn't get the number of fetched books [#{text}]")
@@ -83,7 +83,9 @@ module KindleManager
     end
 
     def snapshot_page
-      log "Current page [#{session.first('.contentCount_myx').text}]" if session.first('.contentCount_myx')
+      if (text = doc.css('.contentCount_myx').try!(:text)).present?
+        log "Current page [#{text.to_s.gsub(/[[:space:]]+/, ' ').strip}]"
+      end
       store.record_page
       log "Saving page"
     end
