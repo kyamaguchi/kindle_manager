@@ -52,7 +52,7 @@ In console
 
 ```
 require 'kindle_manager'
-client = KindleManager::Client.new(debug: true, limit: 1000)
+client = KindleManager::Client.new(verbose: true, limit: 1000)
 client.fetch_kindle_list
 
 books = client.load_kindle_books
@@ -70,8 +70,6 @@ books = client.load_kindle_books
 
 #### Options
 
-Debug print: `client = KindleManager::Client.new(debug: true)`
-
 Limit fetching with number of fetched books: `client = KindleManager::Client.new(limit: 100)`
 
 Change sleep duration on scrolling (default 3 seconds): `client = KindleManager::Client.new(fetching_interval: 5)`
@@ -85,6 +83,8 @@ Renew the directory for downloading: `create: true`
 Firefox: `driver: :firefox`
 
 Login and password: `login: 'xxx', password: 'yyy'`
+
+Output debug log: `debug: true`
 
 ## Applications
 
