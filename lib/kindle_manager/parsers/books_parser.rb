@@ -1,5 +1,5 @@
 module KindleManager
-  class ListParser
+  class BooksParser
     class BookRow
       def initialize(node)
         @node = node

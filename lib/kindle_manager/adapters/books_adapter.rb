@@ -55,7 +55,7 @@ module KindleManager
     def load
       books = []
       store.list_html_files.each do |file|
-        parser = KindleManager::ListParser.new(file)
+        parser = KindleManager::BooksParser.new(file)
         books += parser.book_list
       end
       books.uniq(&:asin)

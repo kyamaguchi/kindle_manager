@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe KindleManager::ListParser do
+describe KindleManager::BooksParser do
   def find_fixture_filepath(name)
     path = File.join('spec', 'fixtures', 'files', name)
     pending("Put your html in #{path} for testing") unless File.exists?(path)
@@ -9,7 +9,7 @@ describe KindleManager::ListParser do
 
   before do
     filepath = find_fixture_filepath('test.html')
-    @parser = KindleManager::ListParser.new(filepath)
+    @parser = KindleManager::BooksParser.new(filepath)
   end
 
   it "finds selector of list table" do
@@ -19,7 +19,7 @@ describe KindleManager::ListParser do
 
   it "finds list table" do
     expect(@parser.book_list.size).to be > 0
-    expect(@parser.book_list.first).to be_a(KindleManager::ListParser::BookRow)
+    expect(@parser.book_list.first).to be_a(KindleManager::BooksParser::BookRow)
   end
 
   context 'BookRow' do
