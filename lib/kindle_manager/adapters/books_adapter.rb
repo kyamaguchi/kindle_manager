@@ -56,7 +56,7 @@ module KindleManager
       books = []
       store.list_html_files.each do |file|
         parser = KindleManager::BooksParser.new(file)
-        books += parser.book_list
+        books += parser.parse
       end
       books.uniq(&:asin)
     end

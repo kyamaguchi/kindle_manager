@@ -18,29 +18,29 @@ describe KindleManager::BooksParser do
   end
 
   it "finds list table" do
-    expect(@parser.book_list.size).to be > 0
-    expect(@parser.book_list.first).to be_a(KindleManager::BooksParser::BookRow)
+    expect(@parser.parse.size).to be > 0
+    expect(@parser.parse.first).to be_a(KindleManager::BooksParser::BookRow)
   end
 
   context 'BookRow' do
     it "has information" do
-      book_row = @parser.book_list.last
+      book_row = @parser.parse.last
       expect(book_row.asin).to match(/\AB0.{8}\z/)
       expect(book_row.title).to be_present
-      expect(@parser.book_list.map(&:tag)).to include('Sample')
+      expect(@parser.parse.map(&:tag)).to include('Sample')
       expect(book_row.author).to be_present
       expect(book_row.date).to be_present
       expect(book_row.date).to be_a(Date)
-      expect(@parser.book_list.map(&:collection_count).compact).to be_present
+      expect(@parser.parse.map(&:collection_count).compact).to be_present
     end
 
     it "prints json" do
-      book_row = @parser.book_list.last
+      book_row = @parser.parse.last
       json = book_row.to_json
       expect(json).to match(/"asin"/)
       expect(json).to match(/"title"/)
       expect(json).to match(/"\d{4}-\d{2}-\d{2}"/) # date
-      expect(@parser.book_list.to_json).to match(/\[{"asin":/)
+      expect(@parser.parse.to_json).to match(/\[{"asin":/)
     end
   end
 end

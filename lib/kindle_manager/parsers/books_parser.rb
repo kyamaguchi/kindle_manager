@@ -1,5 +1,5 @@
 module KindleManager
-  class BooksParser
+  class BooksParser < BaseParser
     class BookRow
       def initialize(node)
         @node = node
@@ -50,20 +50,8 @@ module KindleManager
       end
     end
 
-    def initialize(filepath, options = {})
-      @filepath = filepath
-    end
-
-    def book_list
-      @book_list ||= doc.css("div[id^='contentTabList_']").map{|e| BookRow.new(e) }
-    end
-
-    def doc
-      @doc ||= Nokogiri::HTML(body)
-    end
-
-    def body
-      @body ||= File.read(@filepath)
+    def parse
+      @_parsed ||= doc.css("div[id^='contentTabList_']").map{|e| BookRow.new(e) }
     end
   end
 end
