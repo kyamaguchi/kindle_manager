@@ -11,7 +11,7 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
-  config.filter_run_excluding browser: true, require_fixture: true
+  config.filter_run_excluding browser: true
 
   config.before do
     allow_any_instance_of(KindleManager::FileStore).to receive(:downloads_dir).and_return('spec/fixtures/downloads')

@@ -1,8 +1,11 @@
 require 'spec_helper'
 
 describe KindleManager::Client do
-  describe '#load_kindle_books', require_fixture: true do
-    # Copy a directory in 'downloads/books/' to 'spec/fixtures/downloads/books/'
+  describe '#load_kindle_books' do
+    before do
+      pending("Put your files in 'downloads/books/' into 'spec/fixtures/downloads/books/' for testing") if Dir.glob("spec/fixtures/downloads/books/*/*.html").blank?
+    end
+
     it "lists books" do
       client = KindleManager::Client.new
       books = client.load_kindle_books
@@ -12,8 +15,11 @@ describe KindleManager::Client do
     end
   end
 
-  describe '#load_kindle_highlights', require_fixture: true do
-    # Copy a directory in 'downloads/highlights/' to 'spec/fixtures/downloads/highlights/'
+  describe '#load_kindle_highlights' do
+    before do
+      pending("Put your files in 'downloads/highlights/' into 'spec/fixtures/downloads/highlights/' for testing") if Dir.glob("spec/fixtures/downloads/highlights/*/*.html").blank?
+    end
+
     it "lists highlights" do
       client = KindleManager::Client.new
       books = client.load_kindle_highlights
