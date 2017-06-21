@@ -2,7 +2,7 @@ module KindleManager
   class BaseAdapter
     include AmazonAuth::CommonExtension
 
-    attr_accessor :store, :session
+    attr_accessor :store, :session, :options
 
     def initialize(options)
       @options = options
