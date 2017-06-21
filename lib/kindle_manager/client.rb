@@ -31,12 +31,12 @@ module KindleManager
     end
 
     def load_kindle_books
-      set_adapter(:books, @options)
+      set_adapter(:books, @options.except(:create))
       adapter.load
     end
 
     def load_kindle_highlights
-      set_adapter(:highlights, @options)
+      set_adapter(:highlights, @options.except(:create))
       adapter.load
     end
 
