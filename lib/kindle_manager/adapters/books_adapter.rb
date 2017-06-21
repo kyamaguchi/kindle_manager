@@ -28,13 +28,13 @@ module KindleManager
 
     def load_next_kindle_list
       wait_for_selector('.contentCount_myx')
-      @current_loop = 0
-      while @current_loop <= @max_scroll_attempts
-        if @limit && @limit < number_of_fetched_books
+      current_loop = 0
+      while current_loop <= max_scroll_attempts
+        if limit && limit < number_of_fetched_books
           break
         elsif has_more_button?
           snapshot_page
-          @current_loop = 0
+          current_loop = 0
 
           log "Clicking 'Show More'"
           session.execute_script "window.scrollBy(0,-800)"
@@ -42,11 +42,11 @@ module KindleManager
           sleep 1
           raise('Clicking of more button may have failed') if has_more_button?
         else
-          log "Loading books with scrolling #{@current_loop+1}"
+          log "Loading books with scrolling #{current_loop+1}"
           session.execute_script "window.scrollBy(0,10000)"
         end
         sleep fetching_interval
-        @current_loop += 1
+        current_loop += 1
       end
       log "Stopped loading"
       snapshot_page
