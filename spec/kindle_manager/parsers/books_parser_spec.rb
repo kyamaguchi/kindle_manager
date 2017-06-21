@@ -1,12 +1,6 @@
 require 'spec_helper'
 
 describe KindleManager::BooksParser do
-  def find_fixture_filepath(name)
-    path = File.join('spec', 'fixtures', 'files', name)
-    pending("Put your html in #{path} for testing") unless File.exists?(path)
-    path
-  end
-
   before do
     filepath = find_fixture_filepath('test.html')
     @parser = KindleManager::BooksParser.new(filepath)
