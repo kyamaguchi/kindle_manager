@@ -1,6 +1,6 @@
 module KindleManager
   class HighlightsAdapter < BaseAdapter
-    KINDLE_HIGHLIGHT_URL = 'https://read.amazon.co.jp/kp/notebook'
+    KINDLE_HIGHLIGHT_URL = "https://read.#{AmazonInfo.domain}/kp/notebook"
 
     def fetch
       go_to_kindle_highlights_page
