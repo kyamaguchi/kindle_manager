@@ -35,6 +35,11 @@ module KindleManager
       adapter.load
     end
 
+    def load_kindle_highlights
+      set_adapter(:highlights, @options)
+      adapter.load
+    end
+
     def quit
       session.driver.quit
     end

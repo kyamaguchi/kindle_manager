@@ -83,6 +83,7 @@ module KindleManager
       @_parsed ||= begin
         result = doc.css('.kp-notebook-annotation-container').map{|e| BookWithNote.new(e) }
         puts "[DEBUG] This page(#{@filepath}) has many books. asin -> #{result.map(&:asin).join(',')}" if result.size >= 2
+        puts "[DEBUG] Incomplete page(#{@filepath}). asin:#{result.first.asin} #{result.first.title} (#{result.first.count_summary['text'].inspect})" if result.any?(&:invalid?)
         result
       end
     end

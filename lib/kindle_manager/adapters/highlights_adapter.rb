@@ -69,7 +69,12 @@ module KindleManager
     end
 
     def load
-      # TODO
+      books = []
+      store.list_html_files.each do |file|
+        parser = KindleManager::HighlightsParser.new(file)
+        books += parser.parse
+      end
+      books.reject(&:invalid?).uniq(&:asin)
     end
 
     def snapshot_page(message = nil)
