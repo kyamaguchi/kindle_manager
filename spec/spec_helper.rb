@@ -1,6 +1,8 @@
 require "bundler/setup"
 require "kindle_manager"
 
+Dir[File.join(File.dirname(__FILE__), "..", "spec", "support", "**/*.rb")].each {|f| require f}
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
@@ -9,7 +11,7 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
-  config.filter_run_excluding browser: true, require_fixture: true
+  config.filter_run_excluding browser: true
 
   config.before do
     allow_any_instance_of(KindleManager::FileStore).to receive(:downloads_dir).and_return('spec/fixtures/downloads')

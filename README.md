@@ -3,7 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/kindle_manager.svg)](https://badge.fury.io/rb/kindle_manager)
 [![Build Status](https://travis-ci.org/kyamaguchi/kindle_manager.svg?branch=master)](https://travis-ci.org/kyamaguchi/kindle_manager)
 
-Scrape information of kindle books from amazon site
+Scrape information of kindle books & highlights from amazon site
 
 ##### Fetch Kindle Books information
 
@@ -48,9 +48,11 @@ And `Dotenv.load` or `gem 'dotenv-rails'` may be required when you use this in y
 
 ### Run
 
+#### Kindle books list
+
 In console
 
-```
+```ruby
 require 'kindle_manager'
 client = KindleManager::Client.new(verbose: true, limit: 1000)
 client.fetch_kindle_list
@@ -63,9 +65,63 @@ client.quit
 Once `fetch_kindle_list` succeeds, you can load books information of downloaded pages anytime.
 (You don't need to fetch pages with launching browser every time.)
 
-```
+```ruby
 client = KindleManager::Client.new
 books = client.load_kindle_books
+```
+
+Example of data
+
+```ruby
+console> pp books.first.to_hash
+{"asin"=>"B0026OR2TU",
+ "title"=>
+  "Rails Cookbook: Recipes for Rapid Web Development with Ruby (Cookbooks (O'Reilly))",
+ "tag"=>"Sample",
+ "author"=>"Rob Orsini",
+ "date"=>Fri, 17 Mar 2017,
+ "collection_count"=>0}
+```
+
+#### Kindle highlights and notes
+
+In console
+
+```ruby
+require 'kindle_manager'
+client = KindleManager::Client.new(verbose: true, limit: 10)
+client.fetch_kindle_highlights
+
+books = client.load_kindle_highlights
+```
+
+Example of data
+
+```ruby
+console> pp books.first.to_hash
+{"asin"=>"B004YW6M6G",
+ "title"=>
+  "Design Patterns in Ruby (Adobe Reader) (Addison-Wesley Professional Ruby Series)",
+ "author"=>"Russ Olsen",
+ "last_annotated_on"=>Wed, 21 Jun 2017,
+ "highlights_count"=>8,
+ "notes_count"=>7,
+ "highlights_and_notes"=>
+  [{"location"=>350,
+    "highlight"=>
+     "Design Patterns: Elements of Reusable Object-Oriented Software,",
+    "color"=>"orange",
+    "note"=>""},
+   {"location"=>351,
+    "highlight"=>"\"Gang of Four book\" (GoF)",
+    "color"=>"yellow",
+    "note"=>""},
+   {"location"=>356, "highlight"=>nil, "color"=>nil, "note"=>"note foo"},
+   ...
+   {"location"=>385,
+    "highlight"=>nil,
+    "color"=>nil,
+    "note"=>"object oriented"}]}
 ```
 
 #### Options
@@ -85,6 +141,10 @@ Firefox: `driver: :firefox`
 Login and password: `login: 'xxx', password: 'yyy'`
 
 Output debug log: `debug: true`
+
+## TODO
+
+- Limit the number of fetching books by date
 
 ## Applications
 
