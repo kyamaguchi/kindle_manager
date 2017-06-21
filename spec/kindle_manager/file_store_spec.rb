@@ -7,6 +7,10 @@ describe KindleManager::FileStore do
     session
   end
 
+  before do
+    allow_any_instance_of(KindleManager::FileStore).to receive(:downloads_dir).and_return('spec/fixtures/store_test/downloads')
+  end
+
   describe '#base_dir' do
     it "includes directory with timestamp" do
       store = KindleManager::FileStore.new
