@@ -2,7 +2,7 @@ module KindleManager
   class HighlightsAdapter < BaseAdapter
     KINDLE_HIGHLIGHT_URL = "https://read.#{AmazonInfo.domain}/kp/notebook"
 
-    attr_accessor :library_ids, :loaded_library_ids
+    attr_accessor :library_ids, :loaded_library_ids, :failed_library_ids
 
     def fetch
       go_to_kindle_highlights_page
@@ -24,12 +24,14 @@ module KindleManager
         scroll_library_pane(last_scroll_top + 20000)
         sleep(2)
         new_scroll_top = check_library_scroll
+        break if limit && limit < doc.css('#library #kp-notebook-library > .a-row').size
         break if last_scroll_top == new_scroll_top
         last_scroll_top = new_scroll_top
       end
       snapshot_page
       self.library_ids = doc.css('#library #kp-notebook-library > .a-row').map{|e| e['id'] }
       self.loaded_library_ids ||= []
+      self.failed_library_ids ||= []
       log "Number of library ids is #{library_ids.size}"
     end
 
@@ -46,7 +48,8 @@ module KindleManager
     end
 
     def fetch_kindle_highlights
-      library_ids.each do |library_id|
+      library_ids.each_with_index do |library_id,i|
+        break if limit && limit < i+1
         next if loaded_library_ids.include?(library_id)
         fetch_book_with_highlights(library_id)
       end
@@ -64,6 +67,7 @@ module KindleManager
       if title.present?
         self.loaded_library_ids << library_id
       else
+        self.failed_library_ids << library_id
         log "[ERROR] Failed to load #{library_id} or this book doesn't have any highlights and notes"
       end
     end
@@ -80,8 +84,7 @@ module KindleManager
     end
 
     def report_failed_ids
-      failed_ids = library_ids - loaded_library_ids
-      log("May have failed with #{failed_ids.inspect}. Retry with client.adapter.session.first('#B000000000').click") if failed_ids.size > 0
+      log("May have failed with #{failed_library_ids.inspect}. Retry with client.adapter.session.first('#B000000000').click") if failed_library_ids.size > 0
     end
 
     def load
