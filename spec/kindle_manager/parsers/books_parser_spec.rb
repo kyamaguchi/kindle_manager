@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe KindleManager::BooksParser do
   before do
-    filepath = find_fixture_filepath('test.html')
+    filepath = find_fixture_filepath('test_books.html')
     @parser = KindleManager::BooksParser.new(filepath)
   end
 
