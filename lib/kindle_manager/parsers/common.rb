@@ -1,6 +1,11 @@
 module KindleManager
   module Parsers
     module Common
+      extend ActiveSupport::Concern
+
+      included do
+        attr_accessor :fetched_at
+      end
 
       def parse_date(date_text)
         begin

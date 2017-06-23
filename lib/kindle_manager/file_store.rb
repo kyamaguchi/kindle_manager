@@ -1,5 +1,7 @@
 module KindleManager
   class FileStore
+    TIME_FORMAT_FOR_FILENAME = '%Y%m%d%H%M%S'
+
     attr_accessor :dir_name, :session
 
     def initialize(options = {})
@@ -52,7 +54,7 @@ module KindleManager
     private
 
       def build_filepath(time, ext)
-        File.join(base_dir, "#{time.strftime('%Y%m%d%H%M%S')}#{(time.usec / 1000.0).round.to_s.rjust(3,'0')}.#{ext}")
+        File.join(base_dir, "#{time.strftime(TIME_FORMAT_FOR_FILENAME)}#{(time.usec / 1000.0).round.to_s.rjust(3,'0')}.#{ext}")
       end
   end
 end
