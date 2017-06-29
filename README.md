@@ -151,6 +151,7 @@ Output debug log: `debug: true`
 Applications using this gem
 
 - [tsundoku 積読](https://github.com/kyamaguchi/tsundoku)
+- [kindle_highlight app](https://github.com/kyamaguchi/kindle_highlight)
 - Let me know(create a pull request) if you create an app
 
 ## Development
