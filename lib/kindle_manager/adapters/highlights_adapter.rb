@@ -11,8 +11,10 @@ module KindleManager
     end
 
     def go_to_kindle_highlights_page
-      log "Visiting kindle highlights page"
-      session.visit KINDLE_HIGHLIGHT_URL
+      unless session.current_url == KINDLE_HIGHLIGHT_URL
+        log "Visiting kindle highlights page"
+        session.visit KINDLE_HIGHLIGHT_URL
+      end
       wait_for_selector('#library')
       check_library_scroll
       snapshot_page

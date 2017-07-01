@@ -25,7 +25,8 @@ module KindleManager
     end
 
     def fetch_kindle_highlights
-      sign_in
+      session.visit KindleManager::HighlightsAdapter::KINDLE_HIGHLIGHT_URL
+      @client.submit_signin_form
       set_adapter(:highlights, @options.merge(session: session))
       adapter.fetch
     end
