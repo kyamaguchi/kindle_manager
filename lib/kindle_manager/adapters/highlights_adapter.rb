@@ -38,11 +38,16 @@ module KindleManager
     end
 
     def check_library_scroll
-      scroll_top = session.evaluate_script("$('#library .kp-notebook-scroller-addon').get(0).scrollTop")
-      scroll_height = session.evaluate_script("$('#library .kp-notebook-scroller-addon').get(0).scrollHeight")
-      offset_height = session.evaluate_script("$('#library .kp-notebook-scroller-addon').get(0).offsetHeight")
-      log "Scroll top:#{scroll_top} height:#{scroll_height} offset_height:#{offset_height}"
-      scroll_top
+      if session.first('#library .kp-notebook-scroller-addon').present?
+        scroll_top = session.evaluate_script("$('#library .kp-notebook-scroller-addon').get(0).scrollTop")
+        scroll_height = session.evaluate_script("$('#library .kp-notebook-scroller-addon').get(0).scrollHeight")
+        offset_height = session.evaluate_script("$('#library .kp-notebook-scroller-addon').get(0).offsetHeight")
+        log "Scroll top:#{scroll_top} height:#{scroll_height} offset_height:#{offset_height}"
+        scroll_top
+      else
+        log "Couldn't find the node '#library .kp-notebook-scroller-addon'"
+        0
+      end
     end
 
     def scroll_library_pane(target_scroll_top)
