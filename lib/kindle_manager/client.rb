@@ -2,7 +2,7 @@ module KindleManager
   class Client
     include AmazonAuth::CommonExtension
 
-    attr_accessor :adapter
+    attr_accessor :adapter, :options
 
     def initialize(options = {})
       @options = options
@@ -14,10 +14,6 @@ module KindleManager
       @_session ||= @client.session
     end
 
-    def sign_in
-      @client.sign_in
-    end
-
     def fetch_kindle_list
       sign_in
       set_adapter(:books, @options.merge(session: session))
@@ -25,8 +21,7 @@ module KindleManager
     end
 
     def fetch_kindle_highlights
-      session.visit KindleManager::HighlightsAdapter::KINDLE_HIGHLIGHT_URL
-      @client.submit_signin_form
+      sign_in KindleManager::HighlightsAdapter::KINDLE_HIGHLIGHT_URL
       set_adapter(:highlights, @options.merge(session: session))
       adapter.fetch
     end

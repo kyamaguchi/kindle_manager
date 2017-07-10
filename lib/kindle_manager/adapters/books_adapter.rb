@@ -22,6 +22,8 @@ module KindleManager
         if session.first('.navHeader_myx')
           log "Page found '#{session.first('.navHeader_myx').text}'"
           break
+        else
+          submit_signin_form
         end
       end
     end
