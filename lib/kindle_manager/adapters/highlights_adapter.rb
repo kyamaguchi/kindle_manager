@@ -100,7 +100,7 @@ module KindleManager
         parser = KindleManager::HighlightsParser.new(file)
         books += parser.parse
       end
-      books.reject(&:invalid?).uniq(&:asin)
+      books.reject(&:invalid?).sort_by{|b| [-b.last_annotated_on.to_time.to_i, -b.fetched_at.to_i] }.uniq(&:asin)
     end
 
     def snapshot_page(message = nil)

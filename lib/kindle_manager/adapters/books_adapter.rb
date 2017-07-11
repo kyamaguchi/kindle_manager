@@ -22,6 +22,8 @@ module KindleManager
         if session.first('.navHeader_myx')
           log "Page found '#{session.first('.navHeader_myx').text}'"
           break
+        else
+          submit_signin_form
         end
       end
     end
@@ -29,10 +31,10 @@ module KindleManager
     def load_next_kindle_list
       wait_for_selector('.contentCount_myx')
       current_loop = 0
+      last_page_scroll_offset = page_scroll_offset
       while current_loop <= max_scroll_attempts
-        if limit && limit < number_of_fetched_books
-          break
-        elsif has_more_button?
+        break if limit && limit < number_of_fetched_books
+        if has_more_button?
           snapshot_page
           current_loop = 0
 
@@ -46,9 +48,16 @@ module KindleManager
           session.execute_script "window.scrollBy(0,10000)"
         end
         sleep fetching_interval
+        if last_page_scroll_offset == page_scroll_offset
+          log "Stopping loading because 'page_scroll_offset' didn't change after a loop"
+          break
+        else
+          debug "last_page_scroll_offset:#{last_page_scroll_offset} new page_scroll_offset:#{page_scroll_offset}"
+        end
+        last_page_scroll_offset = page_scroll_offset
         current_loop += 1
       end
-      log "Stopped loading"
+      log "Stopped loading. You may want to resume with 'client.adapter.load_next_kindle_list'"
       snapshot_page
     end
 
@@ -58,7 +67,11 @@ module KindleManager
         parser = KindleManager::BooksParser.new(file)
         books += parser.parse
       end
-      books.uniq(&:asin)
+      books.sort_by{|b| [-b.date.to_time.to_i, -b.fetched_at.to_i] }.uniq(&:asin)
+    end
+
+    def page_scroll_offset
+      session.evaluate_script('window.pageYOffset')
     end
 
     def has_more_button?

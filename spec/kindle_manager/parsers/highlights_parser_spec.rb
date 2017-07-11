@@ -30,6 +30,12 @@ describe KindleManager::HighlightsParser do
       expect(book.notes.size).to eql(book.notes_count)
     end
 
+    it "has timestamp which comes from file" do
+      expect(@parser.fetched_at).to be_present
+      book = @parser.parse.last
+      expect(book.fetched_at).to be_present
+    end
+
     it "prints json" do
       book = @parser.parse.last
       json = book.to_json

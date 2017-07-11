@@ -28,6 +28,12 @@ describe KindleManager::BooksParser do
       expect(@parser.parse.map(&:collection_count).compact).to be_present
     end
 
+    it "has timestamp which comes from file" do
+      expect(@parser.fetched_at).to be_present
+      book_row = @parser.parse.last
+      expect(book_row.fetched_at).to be_present
+    end
+
     it "prints json" do
       book_row = @parser.parse.last
       json = book_row.to_json

@@ -3,8 +3,9 @@ module KindleManager
     class BookWithNote
       include KindleManager::Parsers::Common
 
-      def initialize(node)
+      def initialize(node, options = {})
         @node = node
+        @fetched_at = options[:fetched_at]
       end
 
       def inspect
@@ -81,7 +82,7 @@ module KindleManager
 
     def parse
       @_parsed ||= begin
-        result = doc.css('.kp-notebook-annotation-container').map{|e| BookWithNote.new(e) }
+        result = doc.css('.kp-notebook-annotation-container').map{|e| BookWithNote.new(e, fetched_at: fetched_at) }
         puts "[DEBUG] This page(#{@filepath}) has many books. asin -> #{result.map(&:asin).join(',')}" if result.size >= 2
         puts "[DEBUG] Incomplete page(#{@filepath}). asin:#{result.first.asin} #{result.first.title} (#{result.first.count_summary['text'].inspect})" if result.any?(&:invalid?)
         result

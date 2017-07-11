@@ -54,7 +54,7 @@ In console
 
 ```ruby
 require 'kindle_manager'
-client = KindleManager::Client.new(verbose: true, limit: 1000)
+client = KindleManager::Client.new(keep_cookie: true, verbose: true, limit: 1000)
 client.fetch_kindle_list
 
 books = client.load_kindle_books
@@ -89,7 +89,7 @@ In console
 
 ```ruby
 require 'kindle_manager'
-client = KindleManager::Client.new(verbose: true, limit: 10)
+client = KindleManager::Client.new(keep_cookie: true, verbose: true, limit: 10)
 client.fetch_kindle_highlights
 
 books = client.load_kindle_highlights

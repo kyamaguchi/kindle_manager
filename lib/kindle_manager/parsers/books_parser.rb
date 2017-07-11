@@ -1,10 +1,12 @@
 module KindleManager
   class BooksParser < BaseParser
     class BookRow
+
       include KindleManager::Parsers::Common
 
-      def initialize(node)
+      def initialize(node, options = {})
         @node = node
+        @fetched_at = options[:fetched_at]
       end
 
       def inspect
@@ -45,7 +47,9 @@ module KindleManager
     end
 
     def parse
-      @_parsed ||= doc.css("div[id^='contentTabList_']").map{|e| BookRow.new(e) }
+      @_parsed ||= begin
+        doc.css("div[id^='contentTabList_']").map{|e| BookRow.new(e, fetched_at: fetched_at) }
+      end
     end
   end
 end

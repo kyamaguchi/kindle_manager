@@ -1,6 +1,8 @@
 module KindleManager
   class FileStore
-    attr_accessor :dir_name, :session
+    TIME_FORMAT_FOR_FILENAME = '%Y%m%d%H%M%S'
+
+    attr_accessor :sub_dir, :dir_name, :session
 
     def initialize(options = {})
       @sub_dir = options.fetch(:sub_dir, 'books').to_s
@@ -11,28 +13,20 @@ module KindleManager
       @session = options.fetch(:session, nil)
     end
 
-    def downloads_dir
-      'downloads'
-    end
-
-    def root_dir
-      File.join(downloads_dir, @sub_dir)
-    end
-
-    def base_dir
-      File.join(root_dir, @dir_name)
+    def target_dir
+      File.join(sub_dir, dir_name)
     end
 
     def list_work_dirs
-      Dir["#{root_dir}/*"].select{|f| File.directory? f }
+      Dir[File.join(Capybara.save_path, sub_dir,'*')].select{|f| File.directory? f }
     end
 
     def find_latest_dir_name
       list_work_dirs.sort.last.to_s.split('/').last
     end
 
-    def list_html_files(dir = nil)
-      Dir[File.join(base_dir,'*.html')].select{|f| File.file? f }
+    def list_html_files
+      Dir[File.join(Capybara.save_path, target_dir,'*.html')].select{|f| File.file? f }
     end
 
     def html_path(time)
@@ -52,7 +46,7 @@ module KindleManager
     private
 
       def build_filepath(time, ext)
-        File.join(base_dir, "#{time.strftime('%Y%m%d%H%M%S')}#{(time.usec / 1000.0).round.to_s.rjust(3,'0')}.#{ext}")
+        File.join(target_dir, "#{time.strftime(TIME_FORMAT_FOR_FILENAME)}#{(time.usec / 1000.0).round.to_s.rjust(3,'0')}.#{ext}")
       end
   end
 end
