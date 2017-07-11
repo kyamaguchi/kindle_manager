@@ -8,7 +8,7 @@ describe KindleManager::FileStore do
   end
 
   before do
-    allow(Capybara).to receive(:save_path).and_return('spec/fixtures/store_test/downloads')
+    allow(Capybara).to receive(:save_path).and_return('spec/fixtures/store_test')
   end
 
   describe '#target_dir' do

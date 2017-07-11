@@ -14,7 +14,7 @@ RSpec.configure do |config|
   config.filter_run_excluding browser: true
 
   config.before do
-    allow(Capybara).to receive(:save_path).and_return('spec/fixtures/downloads')
+    allow(Capybara).to receive(:save_path).and_return('spec/fixtures/tmp')
 
     # Mock credentials
     %w[AMAZON_USERNAME_CODE AMAZON_PASSWORD_CODE AMAZON_CODE_SALT].each do |key|

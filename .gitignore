@@ -10,8 +10,8 @@
 /.env
 /.byebug_history
 /.ruby-version
-/downloads/
 /spec/fixtures/files/
+/spec/fixtures/tmp/
 
 # rspec failure tracking
 .rspec_status
