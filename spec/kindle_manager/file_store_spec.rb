@@ -8,18 +8,18 @@ describe KindleManager::FileStore do
   end
 
   before do
-    allow_any_instance_of(KindleManager::FileStore).to receive(:downloads_dir).and_return('spec/fixtures/store_test/downloads')
+    allow(Capybara).to receive(:save_path).and_return('spec/fixtures/store_test/downloads')
   end
 
-  describe '#base_dir' do
+  describe '#target_dir' do
     it "includes directory with timestamp" do
       store = KindleManager::FileStore.new
-      expect(store.base_dir).to match(%r{downloads/books/\d{14}})
+      expect(store.target_dir).to match(%r{books/\d{14}})
     end
 
     it "accepts sub_dir option" do
       store = KindleManager::FileStore.new(sub_dir: 'highlights')
-      expect(store.base_dir).to match(%r{downloads/highlights/\d{14}})
+      expect(store.target_dir).to match(%r{highlights/\d{14}})
     end
   end
 
@@ -46,7 +46,7 @@ describe KindleManager::FileStore do
     end
 
     it "creates directory when directories don't exist" do
-      allow_any_instance_of(KindleManager::FileStore).to receive(:downloads_dir).and_return('spec/fixtures/downloads/empty')
+      allow(Capybara).to receive(:save_path).and_return('spec/fixtures/empty')
       store = KindleManager::FileStore.new
       expect(store.dir_name).to match(%r{#{Time.current.strftime('%Y%m%d')}\d{6}})
       expect(store.dir_name).to_not eql(old_dir_name)
@@ -59,7 +59,7 @@ describe KindleManager::FileStore do
     it "has filename with given time" do
       store = KindleManager::FileStore.new
       time = Time.current
-      expect(store.html_path(time)).to match(%r{downloads/books/\d{14}/\d{17}\.html\z})
+      expect(store.html_path(time)).to match(%r{books/\d{14}/\d{17}\.html\z})
     end
   end
 
@@ -67,7 +67,7 @@ describe KindleManager::FileStore do
     it "has filename with given time" do
       store = KindleManager::FileStore.new
       time = Time.current
-      expect(store.image_path(time)).to match(%r{downloads/books/\d{14}/\d{17}\.png\z})
+      expect(store.image_path(time)).to match(%r{books/\d{14}/\d{17}\.png\z})
     end
   end
 
@@ -75,13 +75,13 @@ describe KindleManager::FileStore do
     it "lists html files" do
       store = KindleManager::FileStore.new
       expect(store.list_html_files.size).to be > 0
-      expect(store.list_html_files.first).to match(%r{downloads/books/\d{14}/\d{17}\.html\z})
+      expect(store.list_html_files.first).to match(%r{books/\d{14}/\d{17}\.html\z})
     end
 
     it "lists html files with sub_dir option" do
       store = KindleManager::FileStore.new(sub_dir: 'highlights')
       expect(store.list_html_files.size).to be > 0
-      expect(store.list_html_files.first).to match(%r{downloads/highlights/\d{14}/\d{17}\.html\z})
+      expect(store.list_html_files.first).to match(%r{highlights/\d{14}/\d{17}\.html\z})
     end
   end
 
@@ -89,7 +89,7 @@ describe KindleManager::FileStore do
     it "saves files in downloads directory" do
       store = KindleManager::FileStore.new(session: session)
       store.record_page
-      expect(Dir[File.join(store.base_dir,'*')].select { |f| File.file? f }.size).to be > 0
+      expect(Dir[File.join(store.target_dir,'*')].select { |f| File.file? f }.size).to be > 0
     end
 
     it "saves multiple pages" do
@@ -100,7 +100,7 @@ describe KindleManager::FileStore do
       session.click_on 'Google 検索'
       expect(session).to have_selector('#resultStats')
       store.record_page
-      expect(Dir[File.join(store.base_dir,'*.html')].select { |f| File.file? f }.map{|f| File.read(f).size }.uniq.size).to be >= 2
+      expect(Dir[File.join(store.target_dir,'*.html')].select { |f| File.file? f }.map{|f| File.read(f).size }.uniq.size).to be >= 2
     end
   end
 end

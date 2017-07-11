@@ -10,7 +10,7 @@ module KindleManager
       extend(AmazonAuth::SessionExtension)
 
       @store = KindleManager::FileStore.new(options.merge(session: @session))
-      log "Directory for downloaded pages is #{store.base_dir}"
+      log "Directory for downloaded pages is #{store.target_dir}"
     end
 
     def limit
