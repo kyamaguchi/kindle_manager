@@ -18,14 +18,14 @@ module KindleManager
     end
 
     def list_work_dirs
-      Dir["#{Capybara.save_path}/#{sub_dir}/*"].select{|f| File.directory? f }
+      Dir[File.join(Capybara.save_path, sub_dir,'*')].select{|f| File.directory? f }
     end
 
     def find_latest_dir_name
       list_work_dirs.sort.last.to_s.split('/').last
     end
 
-    def list_html_files(dir = nil)
+    def list_html_files
       Dir[File.join(Capybara.save_path, target_dir,'*.html')].select{|f| File.file? f }
     end
 
