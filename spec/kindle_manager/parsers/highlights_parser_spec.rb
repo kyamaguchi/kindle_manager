@@ -48,7 +48,7 @@ describe KindleManager::HighlightsParser do
     describe '#invalid?' do
       it "verifies count of nodes and count_summary part" do
         book = @parser.parse.last
-        expect(book.count_summary['text']).to match(/\d+.*Highlight.*\d.*Note/m)
+        expect(book.count_summary['text']).to match(/\d+.*|.*\d.*/m)
         expect(book.count_summary['highlights_count']).to eql(8)
         expect(book.count_summary['notes_count']).to eql(7)
         expect(book.invalid?).to be_falsey

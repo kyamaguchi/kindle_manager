@@ -21,7 +21,7 @@ module KindleManager
       end
 
       def author
-        @_author ||= @node.css('h1.kp-notebook-metadata').first.text
+        @_author ||= @node.css('p.kp-notebook-metadata.a-size-base').first.text
       end
 
       def last_annotated_on
@@ -61,7 +61,7 @@ module KindleManager
       # This can be used to verify the count of hightlights and notes
       def count_summary
         @_count_summary ||= begin
-          text = @node.css('h1.kp-notebook-metadata').last.text.strip
+          text = @node.css('.kp-notebook-row-separator > .kp-notebook-metadata').last.text.strip
           a, b = text.split('|').map{|text| m = text.match(/\d+/); m.nil? ? nil : m[0].to_i }
           {'text' => text, 'highlights_count' => a, 'notes_count' => b}
         end
