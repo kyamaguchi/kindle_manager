@@ -14,7 +14,7 @@ module KindleManager
 
     def go_to_kindle_management_page
       log "Visiting kindle management page"
-      wait_for_selector('#shopAllLinks', wait_time: 5)
+      wait_for_selector('#navFooter a', wait_time: 5)
       3.times do
         link = links_for('#navFooter a').find{|link| link =~ %r{/gp/digital/fiona/manage/} }
         session.visit link
@@ -79,7 +79,7 @@ module KindleManager
     end
 
     def show_more_button
-      session.all('#contentTable_showMore_myx').find{|e| e['outerHTML'].match(/showmore_button/) }
+      session.all('.contentTableShowMore_myx').find{|e| e['outerHTML'].match(/cnt_shw_more/) }
     end
 
     def number_of_fetched_books
