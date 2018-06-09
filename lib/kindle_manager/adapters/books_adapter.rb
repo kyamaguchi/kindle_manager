@@ -41,8 +41,7 @@ module KindleManager
           log "Clicking 'Show More'"
           session.execute_script "window.scrollBy(0,-800)"
           show_more_button.click
-          sleep 1
-          raise('Clicking of more button may have failed') if has_more_button?
+          sleep fetching_interval
         else
           log "Loading books with scrolling #{current_loop+1}"
           session.execute_script "window.scrollBy(0,10000)"
