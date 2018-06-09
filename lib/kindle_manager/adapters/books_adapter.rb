@@ -14,7 +14,7 @@ module KindleManager
 
     def go_to_kindle_management_page
       log "Visiting kindle management page"
-      wait_for_selector('#shopAllLinks', wait_time: 5)
+      wait_for_selector('#navFooter a', wait_time: 5)
       3.times do
         link = links_for('#navFooter a').find{|link| link =~ %r{/gp/digital/fiona/manage/} }
         session.visit link
@@ -41,8 +41,7 @@ module KindleManager
           log "Clicking 'Show More'"
           session.execute_script "window.scrollBy(0,-800)"
           show_more_button.click
-          sleep 1
-          raise('Clicking of more button may have failed') if has_more_button?
+          sleep fetching_interval
         else
           log "Loading books with scrolling #{current_loop+1}"
           session.execute_script "window.scrollBy(0,10000)"
@@ -79,7 +78,7 @@ module KindleManager
     end
 
     def show_more_button
-      session.all('#contentTable_showMore_myx').find{|e| e['outerHTML'].match(/showmore_button/) }
+      session.all('.contentTableShowMore_myx').find{|e| e['outerHTML'].match(/cnt_shw_more/) }
     end
 
     def number_of_fetched_books
