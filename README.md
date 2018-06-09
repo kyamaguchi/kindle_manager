@@ -142,6 +142,11 @@ Login and password: `login: 'xxx', password: 'yyy'`
 
 Output debug log: `debug: true`
 
+## Issues
+
+There may be problems with capybara 3.  
+Use older version with `gem 'capybara', '~> 2.18.0'` in that case.
+
 ## TODO
 
 - Limit the number of fetching books by date
