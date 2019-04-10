@@ -1,5 +1,7 @@
 module KindleManager
   class BooksAdapter < BaseAdapter
+    URL_FOR_KINDLE_CONTENTS = 'https://www.amazon.co.jp/gp/digital/fiona/manage?ie=UTF8&ref_=nav_youraccount_myk'
+
     def fetch
       go_to_kindle_management_page
       begin
@@ -14,10 +16,8 @@ module KindleManager
 
     def go_to_kindle_management_page
       log "Visiting kindle management page"
-      wait_for_selector('#navFooter a', wait_time: 5)
       3.times do
-        link = links_for('#navFooter a').find{|link| link =~ %r{/gp/digital/fiona/manage/} }
-        session.visit link
+        session.visit URL_FOR_KINDLE_CONTENTS
         wait_for_selector('.navHeader_myx')
         if session.first('.navHeader_myx')
           log "Page found '#{session.first('.navHeader_myx').text}'"
