@@ -40,13 +40,18 @@ module KindleManager
         @_highlights_and_notes ||= begin
           # Excluding the first element which has book info
           @node.css('.a-spacing-base')[1..-1].map do |node|
-            location = node.css('#kp-annotation-location').first['value'].to_i
-            highlight_node = node.css('.kp-notebook-highlight').first
-            highlight = highlight_node && highlight_node.css('#highlight').first.text
-            color = highlight_node && highlight_node['class'].split.find{|v| v =~ /kp-notebook-highlight-/ }.split('-').last
-            note = node.css('#note').first.text
-            {'location' => location, 'highlight' => highlight, 'color' => color, 'note' => note}
-          end
+            begin
+              location = node.css('#kp-annotation-location').first['value'].to_i
+              highlight_node = node.css('.kp-notebook-highlight').first
+              highlight = highlight_node && highlight_node.css('#highlight').first.text
+              color = highlight_node && highlight_node['class'].split.find{|v| v =~ /kp-notebook-highlight-/ }.split('-').last
+              note = node.css('#note').first.text
+              {'location' => location, 'highlight' => highlight, 'color' => color, 'note' => note}
+            rescue => e
+              puts "[DEBUG] #{e.class}: #{e.message}\n#{node.to_html}\n"
+              next
+            end
+          end.compact
         end
       end
 
