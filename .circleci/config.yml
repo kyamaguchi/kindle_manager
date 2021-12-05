@@ -1,0 +1,21 @@
+version: 2.1
+
+jobs:
+  test:
+    parameters:
+      ruby-version:
+        type: string
+    docker:
+      - image: cimg/ruby:<< parameters.ruby-version >>-browsers
+    steps:
+      - checkout
+      - run: bundle install
+      - run: bundle exec rspec
+
+workflows:
+  all-tests:
+    jobs:
+      - test:
+          matrix:
+            parameters:
+              ruby-version: ["2.7.5", "3.0.3"]
