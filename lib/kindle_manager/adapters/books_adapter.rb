@@ -18,9 +18,9 @@ module KindleManager
       log "Visiting kindle management page"
       3.times do
         session.visit URL_FOR_KINDLE_CONTENTS
-        wait_for_selector('.navHeader_myx')
-        if session.first('.navHeader_myx')
-          log "Page found '#{session.first('.navHeader_myx').text}'"
+        wait_for_selector('.navHeader_title_myx')
+        if session.has_css?('.navHeader_title_myx')
+          log "Page found '#{session.first('.navHeader_title_myx').text}'"
           break
         else
           submit_signin_form
