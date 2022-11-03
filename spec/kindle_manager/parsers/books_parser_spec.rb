@@ -8,7 +8,7 @@ describe KindleManager::BooksParser do
 
   it "finds selector of list table" do
     expect(@parser.body).to be_present
-    expect(@parser.doc.css("div[id^='contentTabList_']").size).to be > 0
+    expect(@parser.doc.css('#CONTENT_LIST table tbody tr').size).to be > 0
   end
 
   it "finds list table" do

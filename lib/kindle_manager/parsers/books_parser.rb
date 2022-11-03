@@ -13,28 +13,33 @@ module KindleManager
         "#<#{self.class.name}:#{self.object_id} #{self.to_hash}>"
       end
 
+      def title_node
+        # Possible to use "div[id^='content-title-']"
+        @_title_node ||= @node.css('.digital_entity_title').first
+      end
+
       def asin
-        @_asin ||= @node['name'].gsub(/\AcontentTabList_/, '')
+        @_asin ||= title_node.attributes['id'].value.remove('content-title-')
       end
 
       def title
-        @_title ||= @node.css("div[id^='title']").text
+        @_title ||= title_node.text
       end
 
       def tag
-        @_tag ||= @node.css("div[id^='listViewTitleTag']").css('.myx-text-bold').first.text.strip
+        @_tag ||= @node.css('.information_row.tags').first&.text&.strip
       end
 
       def author
-        @_author ||= @node.css("div[id^='author']").text
+        @_author ||= @node.css("div[id^='content-author-']").text
       end
 
       def date
-        @_date ||= parse_date(@node.css("div[id^='date']").text)
+        @_date ||= parse_date(@node.css("div[id^='content-acquired-date-']").text)
       end
 
       def collection_count
-        @_collection_count ||= @node.css(".collectionsCount .myx-collection-count").first.text.strip.to_i
+        @_collection_count ||= @node.css('.dropdown_count').first&.text&.strip.to_i
       end
 
       def to_hash
@@ -48,7 +53,7 @@ module KindleManager
 
     def parse
       @_parsed ||= begin
-        doc.css("div[id^='contentTabList_']").map{|e| BookRow.new(e, fetched_at: fetched_at) }
+        doc.css('#CONTENT_LIST table tbody tr').map{|e| BookRow.new(e, fetched_at: fetched_at) }
       end
     end
   end
