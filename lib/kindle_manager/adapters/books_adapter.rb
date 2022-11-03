@@ -1,6 +1,6 @@
 module KindleManager
   class BooksAdapter < BaseAdapter
-    URL_FOR_KINDLE_CONTENTS = 'https://www.amazon.co.jp/gp/digital/fiona/manage?ie=UTF8&ref_=nav_youraccount_myk'
+    URL_FOR_KINDLE_CONTENTS = 'https://www.amazon.co.jp/hz/mycd/digital-console/contentlist/booksAll/dateDsc/'
 
     def fetch
       go_to_kindle_management_page
