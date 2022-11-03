@@ -9,6 +9,7 @@ describe KindleManager::Client do
     it "lists books" do
       client = KindleManager::Client.new
       books = client.load_kindle_books
+      # puts books.map(&:inspect)
       expect(books.size).to be > 0
       expect(books.first.asin).to be_present
       expect(books.map(&:asin).uniq.size).to eql(books.uniq.size)
