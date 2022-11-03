@@ -1,6 +1,8 @@
 module KindleManager
   class BooksAdapter < BaseAdapter
-    URL_FOR_KINDLE_CONTENTS = 'https://www.amazon.co.jp/hz/mycd/digital-console/contentlist/booksAll/dateDsc/'
+    def url_for_kindle_contents
+      "https://www.#{ENV['AMAZON_DOMAIN']}/hz/mycd/digital-console/contentlist/booksAll/dateDsc/"
+    end
 
     def fetch
       go_to_kindle_management_page
@@ -17,7 +19,7 @@ module KindleManager
     def go_to_kindle_management_page
       log "Visiting kindle management page"
       3.times do
-        session.visit URL_FOR_KINDLE_CONTENTS
+        session.visit url_for_kindle_contents
         wait_for_selector('#content-page-title')
         if session.has_css?('#content-page-title')
           log "Page found '#{session.first('#content-page-title').text}'"
@@ -59,7 +61,7 @@ module KindleManager
     end
 
     def number_of_fetched_books
-      re = (AmazonInfo.domain =~ /\.jp\z/ ? /(\d+)から(\d+)/ : /(\d+) - (\d+)/)
+      re = (AmazonInfo.domain =~ /\.jp\z/ ? /(\d+)から(\d+)/ : / (\d+) to (\d+) /)
       wait_for_selector('#CONTENT_COUNT')
       text = doc.css('#CONTENT_COUNT').text
       log "Number of books: [#{text}]"
