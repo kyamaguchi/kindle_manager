@@ -9,6 +9,7 @@ require "kindle_manager/parsers/common"
 require "kindle_manager/parsers/base_parser"
 require "kindle_manager/parsers/books_parser"
 require "kindle_manager/parsers/highlights_parser"
+require 'webdrivers'
 
 module KindleManager
 end
