@@ -49,7 +49,7 @@ module KindleManager
         parser = KindleManager::BooksParser.new(file)
         books += parser.parse
       end
-      books.sort_by{|b| [-b.date.to_time.to_i, -b.fetched_at.to_i] }.uniq(&:asin)
+      books.sort_by{|b| [-b.date.to_time.to_i, -b.fetched_at.to_i] }.uniq{|b| [b.asin, b.tag] }
     end
 
     def current_page
